@@ -51,11 +51,11 @@ class WARAPPDLL_API EquipmentProperties{
 
     ~EquipmentProperties();
 
-    void SetEquipmentImgPath(char* szPath);
+    void SetEquipmentImgPath(const char* szPath);
 
     char* GetEquipmentImgPath();
 
-    void SetEquipmentName(char* szName);
+    void SetEquipmentName(const char* szName);
 
     char* GetEquipmentName();
 

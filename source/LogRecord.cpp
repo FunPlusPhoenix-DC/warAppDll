@@ -2,14 +2,17 @@
 
 #include <string>
 
-extern char p_szDefaultPath[MAX_PATH]{0};
+extern char p_szDefaultPath[MAX_PATH];
 
-extern HANDLE hLogFile = INVALID_HANDLE_VALUE;
+HANDLE hLogFile;
 
-extern HANDLE hFileLastPointer = INVALID_HANDLE_VALUE;
+HANDLE hFileLastPointer;
 
 int WARAPPDLL_API __stdcall InitLogger(char* p_PATH_szRoute){
-    if(p_szDefaultPath == NULL){
+
+    char* p_szDefaultPath = new char[MAX_PATH];
+    
+    if(!p_szDefaultPath){
         GetCurrentDirectoryA(NULL,p_szDefaultPath);
 
         sprintf(p_szDefaultPath+strlen(p_szDefaultPath),"\\Log");
@@ -32,14 +35,29 @@ int WARAPPDLL_API __stdcall InitLogger(char* p_PATH_szRoute){
         
         if (hLogFile != INVALID_HANDLE_VALUE)
         {
+            hFileLastPointer = hLogFile;
+
             SetFilePointer(hFileLastPointer,0,NULL,FILE_END);
 
             return 0;
         }
         else
-            return -1;        
+        {
+            dwErrorState = LOGERROR_CANNOTSETLOGFILE;
+
+            return -1;
+        }                    
     }
-    SetFilePointer(hFileLastPointer,0,NULL,FILE_END);
+    try
+    {
+        /* code */
+        SetFilePointer(hFileLastPointer,0,NULL,FILE_END);
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
+    }    
+
     return 0;
 }
 
@@ -74,11 +92,29 @@ int WARAPPDLL_API __stdcall ExecuteLogger(std::string& strContent){
                     dwSize,
                     &dwSize,
                     NULL);
+
+        if (!bWriteStatus)
+        {
+            dwErrorState = LOGERROR_WRITEFILEERROR;
+
+            return -1;
+        }
         
-        SetFilePointer(hLogFile,0,NULL,FILE_END);
+        
+        SetFilePointer(hFileLastPointer,0,NULL,FILE_END);
 
         return 0;
     }
+    dwErrorState = LOGERROR_FILEPOINTERISNULL;
 
     return -1;
+}
+
+long WARAPPDLL_API __stdcall GetExternErrorCode(){
+    return dwErrorState;
+}
+
+void WARAPPDLL_API __stdcall SetExternErrorCode(long& lErrorCode){
+    dwErrorState = lErrorCode;
+    return;
 }

@@ -1,4 +1,4 @@
-#ifndef HEROSTATUS_H_
+﻿#ifndef HEROSTATUS_H_
 
 #define HEROSTATUS_H_
 
@@ -9,6 +9,7 @@
 #ifdef _cplusplus
 
 extern "C" {
+    
 #endif
 
 typedef struct MainProperties
@@ -33,7 +34,7 @@ typedef struct NormalProperties{
 
     float fMp;
 
-    float fArmsDmg; //武器伤害
+    float fArmsDmg; //姝﹀櫒浼ゅ��
 
     float fTotalDmg;
 
@@ -45,7 +46,7 @@ typedef struct NormalProperties{
 
     float fMagicalDmg;
 
-    float fPhysicalCriticalAddition;    //物理爆率
+    float fPhysicalCriticalAddition;    //鐗╃悊鐖嗙巼
 
     float fMagicalCriticalAddition;
 
@@ -94,11 +95,11 @@ class WARAPPDLL_API HeroMain{
 
     ~HeroMain();
 
-    void GetName();
+    char* GetName();
 
-    void SetName();
+    void SetName(const char* szHeroName);
 
-    void SetHeroImgPath(char* szImgpath);
+    void SetHeroImgPath(const char* szImgpath);
 
     char* GetHeroImgPath();
 

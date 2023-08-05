@@ -18,7 +18,9 @@ private:
     /* data */
 public:
     Communicate(/* args */);
+
     ~Communicate();
+    
 };
 
 
